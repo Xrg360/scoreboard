@@ -26,12 +26,12 @@ CREATE TABLE score_history (
 );
 
 -- Function to update house score
-CREATE OR REPLACE FUNCTION update_house_score(house_id INTEGER, points INTEGER)
+CREATE OR REPLACE FUNCTION update_house_score(points INTEGER, house_color TEXT)
 RETURNS void AS $$
 BEGIN
   UPDATE houses
   SET total_score = total_score + points
-  WHERE id = house_id;
+  WHERE color = house_color;
 END;
 $$ LANGUAGE plpgsql;
 

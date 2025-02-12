@@ -50,11 +50,15 @@ export default function Admin() {
     if (!event) return;
   
     try {
+      const firstHouse = houses.find((house) => house.id === positions.first);
+      const secondHouse = houses.find((house) => house.id === positions.second);
+      const thirdHouse = houses.find((house) => house.id === positions.third);
+  
       // Update scores using the RPC function
       await Promise.all([
-        supabase.rpc("update_house_score", { house_id: positions.first, points: event.first_place_points }),
-        supabase.rpc("update_house_score", { house_id: positions.second, points: event.second_place_points }),
-        supabase.rpc("update_house_score", { house_id: positions.third, points: event.third_place_points }),
+        supabase.rpc("update_house_score", { points: event.first_place_points, house_color: firstHouse.color }),
+        supabase.rpc("update_house_score", { points: event.second_place_points, house_color: secondHouse.color }),
+        supabase.rpc("update_house_score", { points: event.third_place_points, house_color: thirdHouse.color }),
   
         // Insert score history
         supabase.from("score_history").insert([
@@ -125,7 +129,7 @@ export default function Admin() {
                           <SelectItem
                             key={house.id}
                             value={house.id}
-                            disabled={isHouseSelected(house.id) && positions.first === house.id}
+                            disabled={isHouseSelected(house.id) || positions.first === house.id || positions.second === house.id || positions.third === house.id}
                           >
                             {house.name}
                           </SelectItem>
